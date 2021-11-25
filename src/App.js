@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useWallet, UseWalletProvider } from 'use-wallet';
 import { ethers } from "ethers";
 import moment from 'moment';
@@ -25,7 +26,7 @@ function App() {
     return (
       <div className="App">
         <div className="container main">
-          <h1>Pawn.fi Rollover Signer</h1>
+          <h1 className="bold">Pawn.fi Rollover Signer</h1>
           <hr />
           <h4 className="bold header">Please switch your wallet network to Ethereum mainnet.</h4>
         </div>
@@ -36,56 +37,67 @@ function App() {
   return (
     <div className="App">
       <div className="container main">
-        <h1 className="header">Pawn.fi Rollover Signer</h1>
+        <h1 className="header bold">Pawn.fi Rollover Signer</h1>
         <hr />
         {wallet.status === 'connected' ?
           <SignerContainer wallet={wallet} chainInfo={chainInfo} />
           :
           <ConnectPrompt wallet={wallet} />
         }
-
       </div>
     </div>
   );
 }
 
-function SignerContainer({ chainInfo, wallet }) {
+function SignerContainer({ chainInfo }) {
   if (!chainInfo) return <h4>Loading...</h4>;
 
   return (
     <div>
       <h4>Active Loans</h4>
-      {chainInfo.loans.map((loan, i) => {
-        const { loanId, terms, data } = loan;
-
-        return (
-          <div className="loan card" key={i}>
-            <h5 className="bold">
-              Loan ID {loanId.toString()}
-              {loan.legacy && ` (Legacy)`}
-            </h5>
-            <p>
-              <strong>Principal:</strong>
-              {' '}
-              {ethers.utils.formatUnits(terms.principal, terms.payableTokenDecimals)}
-              {' '}
-              {terms.payableTokenSymbol}
-            </p>
-            <p>
-              <strong>Interest:</strong>
-              {' '}
-              {ethers.utils.formatUnits(terms.interest, terms.payableTokenDecimals)}
-              {' '}
-              {terms.payableTokenSymbol}
-            </p>
-            <CollateralList loanId={loanId} collateral={loan.collateral} />
-            <p><strong><DueDate ts={data.dueDate} /></strong></p>
-            <p><strong><a className='rollover toggle'>Rollover Loan</a></strong></p>
-          </div>
-        );
-      })}
+      {chainInfo.loans.map((loan, i) =>
+        <LoanCard loan={loan} key={i} />
+      )}
     </div>
   )
+}
+
+function LoanCard({ loan, key }) {
+  const { loanId, terms, data } = loan;
+  const [showRollover, setShowRollover] = useState(false);
+
+  return (
+    <div className="loan card" key={key}>
+      <h5 className="bold">
+        Loan ID {loanId.toString()}
+        {loan.legacy && ` (Legacy)`}
+      </h5>
+      <p>
+        <strong>Principal:</strong>
+        {' '}
+        {ethers.utils.formatUnits(terms.principal, terms.payableTokenDecimals)}
+        {' '}
+        {terms.payableTokenSymbol}
+      </p>
+      <p>
+        <strong>Interest:</strong>
+        {' '}
+        {ethers.utils.formatUnits(terms.interest, terms.payableTokenDecimals)}
+        {' '}
+        {terms.payableTokenSymbol}
+      </p>
+      <CollateralList loanId={loanId} collateral={loan.collateral} />
+      <p><strong><DueDate ts={data.dueDate} /></strong></p>
+      <p><strong>
+        <a className='rollover toggle' onClick={() => setShowRollover(!showRollover)}>
+          {showRollover ? 'Hide' : 'Rollover Loan'}
+        </a>
+      </strong></p>
+      {showRollover &&
+        <RolloverSigningForm oldTerms={terms} />
+      }
+    </div>
+  );
 }
 
 function CollateralList({ loanId, collateral }) {
@@ -123,8 +135,75 @@ function DueDate({ ts }) {
   }
 }
 
-function SigningForm() {
-  return <></>;
+function RolloverSigningForm({ oldTerms }) {
+  const initialState = {
+    principal: oldTerms.principal,
+    interest: oldTerms.interest,
+    duration: oldTerms.duration
+  };
+
+  const [terms, setTerms] = useState(initialState);
+
+  const updateForm = (key) => (e) => {
+    setTerms({ ...terms, [key]: e.target.value });
+  }
+
+  const resetForm = () => setTerms(initialState);
+
+  return (
+    <div className='rollover-form'>
+      <div className='row'>
+        <form>
+          <div className="row">
+            <div className="four columns">
+              <label>New Principal</label>
+            </div>
+            <div className="six columns">
+              <input
+                type="number"
+                onChange={updateForm('principal')}
+                value={terms.principal}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="four columns">
+              <label>New Interest</label>
+            </div>
+            <div className="six columns">
+              {/* TODO: Put implicit APR */}
+              <input
+                type="number"
+                onChange={updateForm('interest')}
+                value={terms.interest}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="four columns">
+              <label>New Duration</label>
+            </div>
+            <div className="six columns">
+              {/* TODO: Put implicit due date */}
+              <input
+                type="number"
+                onChange={updateForm('interest')}
+                value={terms.interest}
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div className='row button-container'>
+        <div className='six columns'>
+          <button className='button reset-button' onClick={resetForm}>Reset</button>
+        </div>
+        <div className='six columns'>
+          <button className='button-primary' onClick={resetForm}>Sign & Download JSON</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ConnectPrompt({ wallet }) {

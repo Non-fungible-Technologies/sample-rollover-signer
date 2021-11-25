@@ -28,6 +28,25 @@
   padding: 1em;
   border: 1px solid #e3e3e3;
   margin-bottom: 1.5em;
+  border-radius: 5px;
+  background-color: #606060;
+  font-size: 1.1em;
+}
+
+.rollover-form {
+  background-color: #c3c3c3;
+  color: #333333;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 1em;
+}
+
+.rollover-form .six.columns {
+  text-align: right;
+}
+
+.reset-button {
+  border: 1px solid #333333;
 }
 
 .loan.card p {
@@ -44,8 +63,13 @@
 
 .collateral.list li {
   margin-bottom: 0.25rem;
+  padding-left: 1em;
 }
 
 .toggle {
   cursor: pointer;
+}
+
+.button-container button {
+  width: 100%;
 }
