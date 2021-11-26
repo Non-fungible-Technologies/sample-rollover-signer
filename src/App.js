@@ -66,10 +66,10 @@ function Landing() {
   return (
     <div className="container" >
       <div className="row centered">
-        <Link to="/lender/sample-rollover-signer"><button className="button-primary">Lender</button></Link>
+        <Link to="/sample-rollover-signer/lender"><button className="button-primary">Lender</button></Link>
       </div>
       <div className="row centered">
-        <Link to="/borrower/sample-rollover-signer"><button className="button-primary">Borrower</button></Link>
+        <Link to="/sample-rollover-signer/borrower"><button className="button-primary">Borrower</button></Link>
       </div>
     </div>
   )
