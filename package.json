@@ -9,6 +9,7 @@
     "ethereumjs-util": "^7.1.3",
     "ethers": "^5.5.1",
     "file-saver": "^2.0.5",
+    "gh-pages": "^3.2.3",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -21,6 +22,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -41,5 +43,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "https://kkennis.github.io/sample-rollover-signer"
 }
