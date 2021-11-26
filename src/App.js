@@ -49,9 +49,9 @@ function App() {
         {wallet.status === 'connected' ?
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/lender" element={<SignerContainer />} />
-              <Route path="/borrower" element={<SubmitContainer />} />
+              <Route path="/sample-rollover-signer" element={<Landing />} />
+              <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
+              <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
             </Routes>
           </BrowserRouter>
           :
@@ -66,10 +66,10 @@ function Landing() {
   return (
     <div className="container" >
       <div className="row centered">
-        <Link to="/lender"><button className="button-primary">Lender</button></Link>
+        <Link to="/lender/sample-rollover-signer"><button className="button-primary">Lender</button></Link>
       </div>
       <div className="row centered">
-        <Link to="/borrower"><button className="button-primary">Borrower</button></Link>
+        <Link to="/borrower/sample-rollover-signer"><button className="button-primary">Borrower</button></Link>
       </div>
     </div>
   )
