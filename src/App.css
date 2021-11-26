@@ -73,3 +73,34 @@
 .button-container button {
   width: 100%;
 }
+
+.total-interest-row {
+  font-size: 0.9em;
+  margin-top: -1em;
+  margin-bottom: 1em;
+}
+
+.rollover-form input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  text-align: right;
+  margin-bottom: 0;
+  padding-right: 0;
+}
+
+.rollover-form .four.columns label {
+  position: relative;
+  top: 0.4em;
+}
+
+.rollover-form .two.columns strong {
+  position: relative;
+  top: 0.4em;
+  left: -1em;
+}
+
+.rollover-form .input-row {
+  margin-top: 2.5em;
+}
