@@ -292,7 +292,7 @@ export function usePawnLender(wallet) {
                     const payableToken = new ethers.Contract(loanData.terms.payableCurrency, ERC20Abi, provider);
 
                     loans.push({
-                        legacy: false,
+                        legacy: true,
                         loanId: loanId,
                         lender: account,
                         // borrower,

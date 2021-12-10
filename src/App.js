@@ -49,9 +49,9 @@ function App() {
         {wallet.status === 'connected' ?
           <BrowserRouter>
             <Routes>
-              <Route path="/sample-rollover-signer" element={<Landing />} />
-              <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
-              <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
+              <Route path="/" element={<Landing />} />
+              <Route path="/lender" element={<SignerContainer />} />
+              <Route path="/borrower" element={<SubmitContainer />} />
             </Routes>
           </BrowserRouter>
           :
@@ -66,10 +66,10 @@ function Landing() {
   return (
     <div className="container" >
       <div className="row centered">
-        <Link to="/sample-rollover-signer/lender"><button className="button-primary">Lender</button></Link>
+        <Link to="/lender"><button className="button-primary">Lender</button></Link>
       </div>
       <div className="row centered">
-        <Link to="/sample-rollover-signer/borrower"><button className="button-primary">Borrower</button></Link>
+        <Link to="/borrower"><button className="button-primary">Borrower</button></Link>
       </div>
     </div>
   )
@@ -320,6 +320,8 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
       chainId: wallet.chainId
     };
 
+    console.log('TI', totalInterest);
+
     const newLoanTerms = {
       durationSecs: terms.duration * SECONDS_IN_DAY,
       principal: ethers.utils.parseUnits(terms.principal.toString(), oldTerms.payableTokenDecimals).toString(),
@@ -332,6 +334,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
     const signer = provider.getSigner();
 
     const sig = fromRpcSig(await signer._signTypedData(domainData, typedLoanTermsData, newLoanTerms));
+
 
     // Generate EIP-712 signature to sign
     // Download terms and signature as JSON
