@@ -108,7 +108,6 @@ function SubmitContainer() {
 
   const handleSubmission = () => {
     // Parse and set payload
-    console.log("THIS IS FILE", selectedFile);
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
@@ -320,13 +319,12 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
       chainId: wallet.chainId
     };
 
-    console.log('TI', totalInterest);
-
     const newLoanTerms = {
       durationSecs: terms.duration * SECONDS_IN_DAY,
       principal: ethers.utils.parseUnits(terms.principal.toString(), oldTerms.payableTokenDecimals).toString(),
       interest: ethers.utils.parseUnits(totalInterest.toString(), oldTerms.payableTokenDecimals).toString(),
-      collateralTokenId: oldTerms.collateralTokenId.toNumber(),
+    //   collateralTokenId: oldTerms.collateralTokenId.toNumber(),
+      collateralTokenId: 111,
       payableCurrency: oldTerms.payableCurrency
     };
 
@@ -363,8 +361,6 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
         dueDate: moment().add(terms.duration, 'days').toISOString(),
       }
     }
-
-    console.log("PAYLOAD", payload);
 
     const blob = new Blob([JSON.stringify(payload, null, 4)], {
       type: "text/plain;charset=utf-8"
