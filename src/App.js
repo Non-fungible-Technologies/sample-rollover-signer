@@ -20,7 +20,19 @@ import { usePawnLender } from './use-pawn-lender';
 
 function Main() {
   return (
-    <UseWalletProvider>
+    <UseWalletProvider
+          connectors={{
+              injected: {
+                  chainId: [1, 4]
+              },
+              walletlink: {
+                  chainId: [1, 4],
+                  url: '',
+                  appName: '',
+                  appLogoUrl: ''
+              },
+          }}
+    >
       <App />
     </UseWalletProvider>
   );
