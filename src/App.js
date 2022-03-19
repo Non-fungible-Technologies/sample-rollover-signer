@@ -8,6 +8,7 @@ import FlashRolloverAbi from './abis/flash-rollover.json';
 
 import {
   BrowserRouter,
+  Navigate,
   Routes,
   Route,
   Link
@@ -52,9 +53,13 @@ function App() {
         {wallet.account ?
           <BrowserRouter>
             <Routes>
-            <Route path="/sample-rollover-signer" element={<Landing />} />
+              <Route path="/sample-rollover-signer" element={<Landing />} />
               <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
               <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
+              <Route
+                path="*"
+                element={<Navigate to="/sample-rollover-signer" replace />}
+              />
             </Routes>
           </BrowserRouter>
           :
