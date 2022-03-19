@@ -44,6 +44,9 @@ function Main() {
 function App() {
   const account = useAccount();
   const [{ data }, connect] = useConnect();
+
+  console.log("rendering", data?.connected);
+
   // if (
   //   data &&
   //   data?.connectors[0].chainId !== 1 &&
@@ -357,7 +360,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
   // window.wallet = wallet;
 
   const totalInterest =
-    (terms.duration / 365) * (terms.apr / 100) * terms.principal;
+    (terms.duration / 365) * (parseInt(terms.apr, 10) / 100) * terms.principal;
 
   const resetForm = () => setTerms(initialState);
 
@@ -385,10 +388,10 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
     const newLoanTerms = {
       durationSecs: terms.duration * SECONDS_IN_DAY,
       principal: ethers.utils
-        .parseUnits(terms.principal.toString(), oldTerms.payableTokenDecimals)
+        .parseUnits(terms.principal.toFixed(oldTerms.payableTokenDecimals), oldTerms.payableTokenDecimals)
         .toString(),
       interest: ethers.utils
-        .parseUnits(totalInterest.toString(), oldTerms.payableTokenDecimals)
+        .parseUnits(totalInterest.toFixed(oldTerms.payableTokenDecimals), oldTerms.payableTokenDecimals)
         .toString(),
       //   collateralTokenId: oldTerms.collateralTokenId.toNumber(),
       collateralTokenId: 111,

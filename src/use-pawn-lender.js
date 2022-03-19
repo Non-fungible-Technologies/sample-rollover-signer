@@ -41,14 +41,14 @@ export const addresses = {
     loanCore: "0x59e57F9A313A2EB1c7357eCc331Ddca14209F403",
     repaymentController: "0x945afF9253C840401166c3d24fF78180Fe0A05df",
     originationController: "0x0585a675029C68A6AF41Ba1350BC8172D6172320",
-    borrowerNote: "0xF5F694eF895395D47EA820d05A4a7A4c079DE82f",
+    borrowerNote: "0x9B458e2B9c0Cd34A62A26B846f45Eb829aEbC96E",
   },
   current: {
     lenderNote: "0x6BD1476dD1D57f08670AF6720CA2eDf37B10746E",
     loanCore: "0x606E4a441290314aEaF494194467Fd2Bb844064A",
     repaymentController: "0x9eCE636e942bCb67f9E0b7B6C51A56570EF6F38d",
     originationController: "0x7C2A27485B69f490945943464541236a025161F6",
-    borrowerNote: "0x9B458e2B9c0Cd34A62A26B846f45Eb829aEbC96E",
+    borrowerNote: "0xe00B37ad3a165A66C20cA3E0170e4749c20eF58c",
   },
   common: {
     assetWrapper: "0x1F563CDd688ad47b75E474FDe74E87C643d129b7",
@@ -63,6 +63,7 @@ export const addresses = {
 export function usePawnLender() {
   const provider = useProvider();
   const [{ data }] = useAccount();
+
   const account = data?.address;
 
   const [chainInfo, setChainInfo] = useState(null);
@@ -84,6 +85,16 @@ export function usePawnLender() {
         PromissoryNoteAbi,
         provider
       );
+      // const legacyLenderNote = new ethers.Contract(
+      //   addresses.legacy.borrowerNote,
+      //   LegacyPromissoryNoteAbi,
+      //   provider
+      // );
+      // const lenderNote = new ethers.Contract(
+      //   addresses.current.borrowerNote,
+      //   PromissoryNoteAbi,
+      //   provider
+      // );
       const legacyBorrowerNote = new ethers.Contract(
         addresses.legacy.borrowerNote,
         LegacyPromissoryNoteAbi,
@@ -132,6 +143,8 @@ export function usePawnLender() {
 
       const numLenderNotes = await lenderNote.balanceOf(account);
       const numLegacyLenderNotes = await legacyLenderNote.balanceOf(account);
+
+    //   console.log("BALANCES", numLenderNotes, numLegacyLenderNotes);
 
       const loans = [];
       window.contracts = {
@@ -445,6 +458,8 @@ export function usePawnLender() {
 
       setChainInfo(Object.assign({ ...chainInfo }, info));
     };
+
+    console.log('In account effect', account, chainInfo, provider);
 
     getInfo();
   }, [account, chainInfo, provider]);
