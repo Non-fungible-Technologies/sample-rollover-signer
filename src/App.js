@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useWallet, UseWalletProvider } from 'use-wallet';
+// import { useWallet, UseWalletProvider } from 'use-wallet';
 import { ethers } from "ethers";
 import { saveAs } from 'file-saver';
 import { fromRpcSig } from "ethereumjs-util";
@@ -17,24 +17,13 @@ import MMLogo from './mm_logo.svg';
 import './App.css';
 
 import { usePawnLender } from './use-pawn-lender';
+import { useWallet, WalletProvider } from './use-wallet';
 
 function Main() {
   return (
-    <UseWalletProvider
-          connectors={{
-              injected: {
-                  chainId: [1, 4]
-              },
-              walletlink: {
-                  chainId: [1, 4],
-                  url: '',
-                  appName: '',
-                  appLogoUrl: ''
-              },
-          }}
-    >
+    <WalletProvider>
       <App />
-    </UseWalletProvider>
+    </WalletProvider>
   );
 }
 
