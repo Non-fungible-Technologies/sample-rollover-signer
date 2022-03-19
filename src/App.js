@@ -52,7 +52,7 @@ function App() {
         {wallet.account ?
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Landing />} />
+            <Route path="/sample-rollover-signer" element={<Landing />} />
               <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
               <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
             </Routes>
