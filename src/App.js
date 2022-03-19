@@ -28,9 +28,11 @@ function Main() {
 }
 
 function App() {
-  const wallet = useWallet();
+  const walletInfo = useWallet();
+  const { wallet } = walletInfo;
+  window.wallet = wallet;
 
-  if (wallet && wallet.chainId !== 1 && wallet.chainId !== 1337) {
+  if (wallet && wallet.networkId !== "1" && wallet.networkId !== "1337") {
     return (
       <div className="App">
         <div className="container main">
@@ -47,7 +49,7 @@ function App() {
       <div className="container main">
         <h1 className="header bold">Pawn.fi Rollover Signer</h1>
         <hr />
-        {wallet.status === 'connected' ?
+        {wallet.account ?
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -56,7 +58,7 @@ function App() {
             </Routes>
           </BrowserRouter>
           :
-          <ConnectPrompt wallet={wallet} />
+        <ConnectPrompt wallet={walletInfo} />
         }
       </div>
     </div>
@@ -453,7 +455,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
 function ConnectPrompt({ wallet }) {
   return (
     <div className='centered'>
-      <button className='connect' onClick={() => wallet.connect()}>
+      <button className='connect' onClick={() => wallet.connectMetaMask()}>
         <img src={MMLogo} alt="Metamask" className='mm-logo' />
         &nbsp;
         Connect Metamask
