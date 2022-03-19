@@ -32,7 +32,7 @@ function App() {
   const { wallet } = walletInfo;
   window.wallet = wallet;
 
-  if (wallet && wallet.networkId !== "1" && wallet.networkId !== "1337") {
+  if (wallet.account && wallet.networkId !== "1" && wallet.networkId !== "1337") {
     return (
       <div className="App">
         <div className="container main">
