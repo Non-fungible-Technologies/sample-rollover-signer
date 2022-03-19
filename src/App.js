@@ -53,8 +53,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/lender" element={<SignerContainer />} />
-              <Route path="/borrower" element={<SubmitContainer />} />
+              <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
+              <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
             </Routes>
           </BrowserRouter>
           :
