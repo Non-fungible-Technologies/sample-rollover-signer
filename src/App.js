@@ -265,11 +265,11 @@ function LoanCard({ loan, key, chainInfo }) {
         {terms.payableTokenSymbol}
       </p>
       <CollateralList loanId={loanId} collateral={loan.collateral} />
-      <p>
+      {/* <p>
         <strong>
           <DueDate ts={data.dueDate} />
         </strong>
-      </p>
+      </p> */}
       <p>
         <strong>
           <a
