@@ -91,12 +91,12 @@ function Landing() {
   return (
     <div className="container">
       <div className="row centered">
-        <Link to="/lender">
+        <Link to="/sample-rollover-signer/lender">
           <button className="button-primary">Lender</button>
         </Link>
       </div>
       <div className="row centered">
-        <Link to="/borrower">
+        <Link to="/sample-rollover-signer/borrower">
           <button className="button-primary">Borrower</button>
         </Link>
       </div>
@@ -538,7 +538,7 @@ function ConnectPrompt() {
         onClick={() => connect(data?.connectors[0])}
       >
         <img src={MMLogo} alt="Metamask" className="mm-logo" />
-        <br />
+        &nbsp;
         Connect Metamask
       </button>
     </div>
