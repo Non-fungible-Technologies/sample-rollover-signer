@@ -394,7 +394,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
         .parseUnits(totalInterest.toFixed(oldTerms.payableTokenDecimals), oldTerms.payableTokenDecimals)
         .toString(),
       //   collateralTokenId: oldTerms.collateralTokenId.toNumber(),
-      collateralTokenId: 114,
+      collateralTokenId: 115,
       payableCurrency: oldTerms.payableCurrency,
     };
 
