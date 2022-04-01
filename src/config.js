@@ -21,4 +21,9 @@ export const addresses = {
     usdc: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     weth: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
   },
+  target: {
+    originationController: "0xf72516d0d038Ec8c0Ef0Fe8f7f4EEaD8Ee1c31E2",
+    flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
+    loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325"
+  }
 };

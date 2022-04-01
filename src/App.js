@@ -151,8 +151,8 @@ function SignerContainer() {
     console.log("approving WETH...");
     try {
       const { hash } = await wethContract.approve(
-        addresses.current.originationController,
-        ethers.constants.MaxInt256
+        addresses.target.originationController,
+        ethers.constants.MaxUInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -171,8 +171,8 @@ function SignerContainer() {
     console.log("approving WETH...");
     try {
       const { hash } = await usdcContract.approve(
-        addresses.current.originationController,
-        ethers.constants.MaxInt256
+        addresses.target.originationController,
+        ethers.constants.MaxUInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -250,8 +250,8 @@ function SubmitContainer() {
     console.log("approving WETH...");
     try {
       const { hash } = await wethContract.approve(
-        addresses.common.flashRollover,
-        ethers.constants.MaxInt256
+        addresses.target.flashRollover,
+        ethers.constants.MaxUInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -270,8 +270,8 @@ function SubmitContainer() {
     console.log("approving WETH...");
     try {
       const { hash } = await usdcContract.approve(
-        addresses.common.flashRollover,
-        ethers.constants.MaxInt256
+        addresses.target.flashRollover,
+        ethers.constants.MaxUInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -291,7 +291,7 @@ function SubmitContainer() {
     console.log("approving Note ID ...", noteId);
     try {
       const { hash } = await borrowerNoteContract.approve(
-        addresses.common.flashRollover,
+        addresses.target.flashRollover,
         noteId
       );
 
@@ -329,7 +329,7 @@ function SubmitContainer() {
     // Sign transasction
     // const provider = new ethers.providers.Web3Provider(wallet.ethereum);
     const flashRollover = new ethers.Contract(
-      "0x24611Fad669350cA869FBed4B62877d1a409dA12",
+      addresses.target.flashRollover,
       // "",
       FlashRolloverAbi,
       signer
@@ -581,7 +581,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
 
     const domainData = {
       verifyingContract:
-        chainInfo.contractAddresses.current.originationController,
+        addresses.target.originationController,
       name: "OriginationController",
       version: "1",
       // chainId: wallet.chainId,
@@ -623,12 +623,12 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
         sourceLoanCore: loan.legacy
           ? chainInfo.contractAddresses.legacy.loanCore
           : chainInfo.contractAddresses.current.loanCore,
-        targetLoanCore: chainInfo.contractAddresses.current.loanCore,
+        targetLoanCore: addresses.target.loanCore,
         sourceRepaymentController: loan.legacy
           ? chainInfo.contractAddresses.legacy.repaymentController
           : chainInfo.contractAddresses.current.repaymentController,
         targetOriginationController:
-          chainInfo.contractAddresses.current.originationController,
+          addresses.target.originationController,
       },
       loanId: loan.loanId.toString(),
       newLoanTerms,
