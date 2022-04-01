@@ -5,6 +5,9 @@ import { saveAs } from "file-saver";
 import { fromRpcSig } from "ethereumjs-util";
 import moment from "moment";
 import FlashRolloverAbi from "./abis/flash-rollover.json";
+import { config } from "./config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Provider,
   chain,
@@ -13,6 +16,9 @@ import {
   useSigner,
   useConnect,
   useNetwork,
+  useContract,
+  erc20ABI,
+  useWaitForTransaction,
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
@@ -36,6 +42,7 @@ function Main() {
   };
   return (
     <Provider connectors={connectors} provider={provider}>
+      <ToastContainer position="top-center" />
       <App />
     </Provider>
   );
@@ -74,8 +81,14 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/sample-rollover-signer" element={<Landing />} />
-              <Route path="/sample-rollover-signer/lender" element={<SignerContainer />} />
-              <Route path="/sample-rollover-signer/borrower" element={<SubmitContainer />} />
+              <Route
+                path="/sample-rollover-signer/lender"
+                element={<SignerContainer />}
+              />
+              <Route
+                path="/sample-rollover-signer/borrower"
+                element={<SubmitContainer />}
+              />
               <Route
                 path="*"
                 element={<Navigate to="/sample-rollover-signer" replace />}
@@ -110,14 +123,88 @@ function Landing() {
 function SignerContainer() {
   // const wallet = useWallet();
   const chainInfo = usePawnLender();
+  const [{ data: signer }] = useSigner();
+
+  const wethContract = useContract({
+    addressOrName: config.CONTRACTS.WETH.ADDRESS,
+    contractInterface: erc20ABI,
+    signerOrProvider: signer,
+  });
+
+  const usdcContract = useContract({
+    addressOrName: config.CONTRACTS.USDC.ADDRESS,
+    contractInterface: erc20ABI,
+    signerOrProvider: signer,
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  const [_, wait] = useWaitForTransaction({
+    skip: true,
+  });
 
   window.chainInfo = chainInfo;
 
   if (!chainInfo) return <h4>Loading...</h4>;
 
+  const approveWETH = async () => {
+    console.log("approving WETH...");
+    try {
+      const { hash } = await wethContract.approve(
+        config.CONTRACTS.ORIGINATION_CONTROLLER.ADDRESS,
+        ethers.constants.MaxInt256
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving WETH...",
+        success: "WETH Approved",
+        error: "Failed to Approve WETH",
+      });
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+
+  const approveUSDC = async () => {
+    console.log("approving WETH...");
+    try {
+      const { hash } = await usdcContract.approve(
+        config.CONTRACTS.ORIGINATION_CONTROLLER.ADDRESS,
+        ethers.constants.MaxInt256
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving USDC...",
+        success: "USDC Approved",
+        error: "Failed to Approve USDC",
+      });
+
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+
   return (
     <div>
       <h4>Active Loans</h4>
+      <div>
+        <button
+          onClick={() => approveWETH()}
+          style={{ backgroundColor: "white" }}
+        >
+          Approve WETH
+        </button>
+        &nbsp; &nbsp;
+        <button
+          onClick={() => approveUSDC()}
+          style={{ backgroundColor: "white" }}
+        >
+          Approve USDC
+        </button>
+      </div>
       {chainInfo.loans.map((loan, i) => (
         <LoanCard loan={loan} key={i} chainInfo={chainInfo} />
       ))}
@@ -389,10 +476,16 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
     const newLoanTerms = {
       durationSecs: terms.duration * SECONDS_IN_DAY,
       principal: ethers.utils
-        .parseUnits(terms.principal.toFixed(oldTerms.payableTokenDecimals), oldTerms.payableTokenDecimals)
+        .parseUnits(
+          terms.principal.toFixed(oldTerms.payableTokenDecimals),
+          oldTerms.payableTokenDecimals
+        )
         .toString(),
       interest: ethers.utils
-        .parseUnits(totalInterest.toFixed(oldTerms.payableTokenDecimals), oldTerms.payableTokenDecimals)
+        .parseUnits(
+          totalInterest.toFixed(oldTerms.payableTokenDecimals),
+          oldTerms.payableTokenDecimals
+        )
         .toString(),
       collateralTokenId: oldTerms.collateralTokenId.toNumber(),
       payableCurrency: oldTerms.payableCurrency,
@@ -541,8 +634,7 @@ function ConnectPrompt() {
         onClick={() => connect(data?.connectors[0])}
       >
         <img src={MMLogo} alt="Metamask" className="mm-logo" />
-        &nbsp;
-        Connect Metamask
+        &nbsp; Connect Metamask
       </button>
     </div>
   );
