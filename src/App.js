@@ -334,16 +334,18 @@ function SubmitContainer() {
       c.charCodeAt(0)
     );
 
-    console.log("###### Payload Rollover :::: ", r, s);
+    console.log("###### Payload Rollover :::: ", r, s, payload);
 
     try {
+      console.log({ flashRolloverContract });
       const { hash: rolloverHash } = await flashRolloverContract.rolloverLoan(
         payload.contracts,
         payload.loanId,
         payload.newLoanTerms,
         payload.signature.v,
         r,
-        s
+        s,
+        { gasLimit: "3000000" }
       );
 
       const waitdoRollover = wait({ confirmations: 1, rolloverHash });
@@ -355,6 +357,7 @@ function SubmitContainer() {
 
       console.log({ response });
     } catch (e) {
+      console.log("ERror ", e);
       toast.error(e);
     }
   };
