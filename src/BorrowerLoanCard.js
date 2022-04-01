@@ -13,7 +13,7 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
   console.log({ loan });
 
   const borrowerNoteContract = useContract({
-    addressOrName: addresses.legacy.borrowerNote,
+    addressOrName: addresses.current.borrowerNote,
     contractInterface: promissoryNoteAbi,
     signerOrProvider: signer,
   });
@@ -52,7 +52,7 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
         style={{ background: "white" }}
         onClick={() => approveNote(loan?.data?.borrowerNoteId)}
         disabled={!loan?.data?.borrowerNoteId}
-      >{`Approve Silver Note ${loan?.data?.borrowerNoteId}`}</button>
+      >{`Approve Note ${loan?.data?.borrowerNoteId}`}</button>
       <h5 className="bold">
         Loan ID {loanId.toString()}
         {loan.legacy && ` (Legacy)`}
