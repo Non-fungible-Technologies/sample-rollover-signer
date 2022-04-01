@@ -96,7 +96,12 @@ function App() {
         <hr />
         {data?.connected ? (
           <>
-            <button onClick={() => disconnect()}>Disconnect</button>
+            <button
+              style={{ border: "1px solid red", color: "white" }}
+              onClick={() => disconnect()}
+            >
+              Disconnect
+            </button>
             <BrowserRouter>
               <Routes>
                 <Route path="/sample-rollover-signer" element={<Landing />} />
