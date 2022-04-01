@@ -65,8 +65,9 @@ function Main() {
 }
 
 function App() {
-  const account = useAccount();
+  // const account = useAccount();
   const [{ data }, connect] = useConnect();
+  const [{ data: account }, disconnect] = useAccount();
 
   console.log("rendering", data?.connected);
 
@@ -94,23 +95,26 @@ function App() {
         <h1 className="header bold">Arcade Rollover Signer</h1>
         <hr />
         {data?.connected ? (
-          <BrowserRouter>
-            <Routes>
-              <Route path="/sample-rollover-signer" element={<Landing />} />
-              <Route
-                path="/sample-rollover-signer/lender"
-                element={<SignerContainer />}
-              />
-              <Route
-                path="/sample-rollover-signer/borrower"
-                element={<SubmitContainer />}
-              />
-              <Route
-                path="*"
-                element={<Navigate to="/sample-rollover-signer" replace />}
-              />
-            </Routes>
-          </BrowserRouter>
+          <>
+            <button onClick={() => disconnect()}>Disconnect</button>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/sample-rollover-signer" element={<Landing />} />
+                <Route
+                  path="/sample-rollover-signer/lender"
+                  element={<SignerContainer />}
+                />
+                <Route
+                  path="/sample-rollover-signer/borrower"
+                  element={<SubmitContainer />}
+                />
+                <Route
+                  path="*"
+                  element={<Navigate to="/sample-rollover-signer" replace />}
+                />
+              </Routes>
+            </BrowserRouter>
+          </>
         ) : (
           <ConnectPrompt />
         )}
