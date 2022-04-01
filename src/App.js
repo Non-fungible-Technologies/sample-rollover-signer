@@ -47,9 +47,9 @@ function Main() {
       }),
       new WalletConnectConnector({
         options: {
-          // rpc: {
-          //   1: arbitrumRpcUrl,
-          // },
+          rpc: {
+            1: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY}`,
+          },
           chainId: 1,
           qrcode: true,
         },
