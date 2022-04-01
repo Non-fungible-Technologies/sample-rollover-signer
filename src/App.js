@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import { fromRpcSig } from "ethereumjs-util";
 import moment from "moment";
 import FlashRolloverAbi from "./abis/flash-rollover.json";
-import { config } from "./config";
+import { addresses } from "./config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -22,10 +22,11 @@ import {
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
-
+import promissoryNoteAbi from "./abis/promissory-note.json";
 import MMLogo from "./mm_logo.svg";
 import "./App.css";
 import { usePawnLender } from "./use-pawn-lender";
+import { usePawnBorrower } from "./usePawnBorrower";
 const ALCHEMY = "nFgwePbNgrn6330Zsxu7l5oKP_IW5xBg";
 
 function Main() {
@@ -126,13 +127,13 @@ function SignerContainer() {
   const [{ data: signer }] = useSigner();
 
   const wethContract = useContract({
-    addressOrName: config.CONTRACTS.WETH.ADDRESS,
+    addressOrName: addresses.tokens.weth,
     contractInterface: erc20ABI,
     signerOrProvider: signer,
   });
 
   const usdcContract = useContract({
-    addressOrName: config.CONTRACTS.USDC.ADDRESS,
+    addressOrName: addresses.tokens.usdc,
     contractInterface: erc20ABI,
     signerOrProvider: signer,
   });
@@ -145,12 +146,12 @@ function SignerContainer() {
   window.chainInfo = chainInfo;
 
   if (!chainInfo) return <h4>Loading...</h4>;
-
+  console.log({ chainInfo });
   const approveWETH = async () => {
     console.log("approving WETH...");
     try {
       const { hash } = await wethContract.approve(
-        config.CONTRACTS.ORIGINATION_CONTROLLER.ADDRESS,
+        addresses.current.originationController,
         ethers.constants.MaxInt256
       );
 
@@ -170,7 +171,7 @@ function SignerContainer() {
     console.log("approving WETH...");
     try {
       const { hash } = await usdcContract.approve(
-        config.CONTRACTS.ORIGINATION_CONTROLLER.ADDRESS,
+        addresses.current.originationController,
         ethers.constants.MaxInt256
       );
 
@@ -206,7 +207,7 @@ function SignerContainer() {
         </button>
       </div>
       {chainInfo.loans.map((loan, i) => (
-        <LoanCard loan={loan} key={i} chainInfo={chainInfo} />
+        <LoanCard loan={loan} key={i} index={i} chainInfo={chainInfo} />
       ))}
     </div>
   );
@@ -214,13 +215,99 @@ function SignerContainer() {
 
 function SubmitContainer() {
   // const wallet = useWallet();
+  const borrowerChainInfo = usePawnBorrower();
+
   const [{ data: signer }] = useSigner();
   const [payload, setPayload] = useState(null);
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
-  window.payload = payload;
+  const wethContract = useContract({
+    addressOrName: addresses.tokens.weth,
+    contractInterface: erc20ABI,
+    signerOrProvider: signer,
+  });
 
+  const usdcContract = useContract({
+    addressOrName: addresses.tokens.usdc,
+    contractInterface: erc20ABI,
+    signerOrProvider: signer,
+  });
+
+  const borrowerNoteContract = useContract({
+    addressOrName: addresses.current.borrowerNote,
+    contractInterface: promissoryNoteAbi,
+    signerOrProvider: signer,
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  const [_, wait] = useWaitForTransaction({
+    skip: true,
+  });
+
+  window.payload = payload;
+  const approveWETH = async () => {
+    console.log("approving WETH...");
+    try {
+      const { hash } = await wethContract.approve(
+        addresses.common.flashRollover,
+        ethers.constants.MaxInt256
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving WETH...",
+        success: "WETH Approved",
+        error: "Failed to Approve WETH",
+      });
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+
+  const approveUSDC = async () => {
+    console.log("approving WETH...");
+    try {
+      const { hash } = await usdcContract.approve(
+        addresses.common.flashRollover,
+        ethers.constants.MaxInt256
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving USDC...",
+        success: "USDC Approved",
+        error: "Failed to Approve USDC",
+      });
+
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+
+  const approveNote = async (noteId) => {
+    console.log("approving Note ID ...", noteId);
+    try {
+      const { hash } = await borrowerNoteContract.approve(
+        addresses.common.flashRollover,
+        noteId
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving Borrower Note...",
+        success: "Note Approved",
+        error: "Failed to Approve Note",
+      });
+
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+  console.log({ borrowerChainInfo });
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
@@ -268,6 +355,8 @@ function SubmitContainer() {
       );
   };
 
+  if (!borrowerChainInfo) return <h4>Loading Borrower Loans...</h4>;
+
   if (!payload) {
     return (
       <div className="container">
@@ -281,6 +370,32 @@ function SubmitContainer() {
             Upload JSON
           </button>
         </div>
+        <div>
+          <button
+            onClick={() => approveWETH()}
+            style={{ backgroundColor: "white" }}
+          >
+            Approve WETH (R)
+          </button>
+          &nbsp; &nbsp;
+          <button
+            onClick={() => approveUSDC()}
+            style={{ backgroundColor: "white" }}
+          >
+            Approve USDC (R)
+          </button>
+        </div>
+        {borrowerChainInfo &&
+          borrowerChainInfo.loans.map((loan, i) => (
+            <div style={{ background: "gray", padding: "10px" }}>
+              <button
+                style={{ background: "white" }}
+                onClick={() => approveNote(loan?.data?.borrowerNoteId)}
+                disabled={!loan?.data?.borrowerNoteId}
+              >{`Approve Note ${loan?.data?.borrowerNoteId}`}</button>
+              <LoanCard loan={loan} key={i} chainInfo={borrowerChainInfo} />
+            </div>
+          ))}
       </div>
     );
   } else {
@@ -329,7 +444,7 @@ function SubmitContainer() {
   }
 }
 
-function LoanCard({ loan, key, chainInfo }) {
+function LoanCard({ loan, index: key, chainInfo }) {
   const { loanId, terms, data } = loan;
   const [showRollover, setShowRollover] = useState(false);
 
