@@ -20,6 +20,7 @@ import {
   erc20ABI,
   useWaitForTransaction,
 } from "wagmi";
+import { BorrowerLoanCard } from "./BorrowerLoanCard";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
 import promissoryNoteAbi from "./abis/promissory-note.json";
@@ -148,7 +149,9 @@ function SignerContainer() {
   if (!chainInfo) return <h4>Loading...</h4>;
   console.log({ chainInfo });
   const approveWETH = async () => {
-    console.log("approving WETH...");
+    console.log(
+      `approving WETH for ... ${addresses.target.originationController}`
+    );
     try {
       const { hash } = await wethContract.approve(
         addresses.target.originationController,
@@ -168,11 +171,13 @@ function SignerContainer() {
   };
 
   const approveUSDC = async () => {
-    console.log("approving WETH...");
+    console.log(
+      `approving USDC for...${addresses.target.originationController}`
+    );
     try {
       const { hash } = await usdcContract.approve(
         addresses.target.originationController,
-        ethers.constants.MaxUInt256
+        ethers.constants.MaxInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -240,6 +245,12 @@ function SubmitContainer() {
     signerOrProvider: signer,
   });
 
+  const flashRolloverContract = useContract({
+    addressOrName: addresses.target.flashRollover,
+    contractInterface: FlashRolloverAbi,
+    signerOrProvider: signer,
+  });
+
   // eslint-disable-next-line no-unused-vars
   const [_, wait] = useWaitForTransaction({
     skip: true,
@@ -267,11 +278,11 @@ function SubmitContainer() {
   };
 
   const approveUSDC = async () => {
-    console.log("approving WETH...");
+    console.log(`approving USDC...${addresses.target.flashRollover}`);
     try {
       const { hash } = await usdcContract.approve(
         addresses.target.flashRollover,
-        ethers.constants.MaxUInt256
+        ethers.constants.MaxInt256
       );
 
       const waitForApproval = wait({ confirmations: 1, hash });
@@ -287,26 +298,6 @@ function SubmitContainer() {
     }
   };
 
-  const approveNote = async (noteId) => {
-    console.log("approving Note ID ...", noteId);
-    try {
-      const { hash } = await borrowerNoteContract.approve(
-        addresses.target.flashRollover,
-        noteId
-      );
-
-      const waitForApproval = wait({ confirmations: 1, hash });
-      const response = await toast.promise(waitForApproval, {
-        pending: "Approving Borrower Note...",
-        success: "Note Approved",
-        error: "Failed to Approve Note",
-      });
-
-      console.log({ response });
-    } catch (e) {
-      toast.error(e);
-    }
-  };
   console.log({ borrowerChainInfo });
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -328,12 +319,12 @@ function SubmitContainer() {
   const doRollover = async () => {
     // Sign transasction
     // const provider = new ethers.providers.Web3Provider(wallet.ethereum);
-    const flashRollover = new ethers.Contract(
-      addresses.target.flashRollover,
-      // "",
-      FlashRolloverAbi,
-      signer
-    );
+    // const flashRollover = new ethers.Contract(
+    //   addresses.target.flashRollover,
+    //   // "",
+    //   FlashRolloverAbi,
+    //   signer
+    // );
 
     // convert sigs to bytes
     const r = Uint8Array.from(atob(payload.signature.r), (c) =>
@@ -343,9 +334,10 @@ function SubmitContainer() {
       c.charCodeAt(0)
     );
 
-    await flashRollover
-      .connect(signer)
-      .rolloverLoan(
+    console.log("###### Payload Rollover :::: ", r, s);
+
+    try {
+      const { hash: rolloverHash } = await flashRolloverContract.rolloverLoan(
         payload.contracts,
         payload.loanId,
         payload.newLoanTerms,
@@ -353,8 +345,19 @@ function SubmitContainer() {
         r,
         s
       );
-  };
 
+      const waitdoRollover = wait({ confirmations: 1, rolloverHash });
+      const response = await toast.promise(waitdoRollover, {
+        pending: "Rollover...",
+        success: "Rollover Approved",
+        error: "Failed to Rollover ",
+      });
+
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
   if (!borrowerChainInfo) return <h4>Loading Borrower Loans...</h4>;
 
   if (!payload) {
@@ -388,12 +391,11 @@ function SubmitContainer() {
         {borrowerChainInfo &&
           borrowerChainInfo.loans.map((loan, i) => (
             <div style={{ background: "gray", padding: "10px" }}>
-              <button
-                style={{ background: "white" }}
-                onClick={() => approveNote(loan?.data?.borrowerNoteId)}
-                disabled={!loan?.data?.borrowerNoteId}
-              >{`Approve Note ${loan?.data?.borrowerNoteId}`}</button>
-              <LoanCard loan={loan} key={i} chainInfo={borrowerChainInfo} />
+              <BorrowerLoanCard
+                loan={loan}
+                key={i}
+                chainInfo={borrowerChainInfo}
+              />
             </div>
           ))}
       </div>
@@ -494,7 +496,7 @@ function LoanCard({ loan, index: key, chainInfo }) {
   );
 }
 
-function CollateralList({ loanId, collateral }) {
+export const CollateralList = ({ loanId, collateral }) => {
   return (
     <div>
       <strong>Collateral:</strong>
@@ -517,7 +519,7 @@ function CollateralList({ loanId, collateral }) {
       </ul>
     </div>
   );
-}
+};
 
 function DueDate({ ts }) {
   const d = moment.unix(ts);
@@ -529,7 +531,7 @@ function DueDate({ ts }) {
   }
 }
 
-function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
+export const RolloverSigningForm = ({ loan, oldTerms, chainInfo }) => {
   // const wallet = useWallet();
   const [{ data: signer }] = useSigner();
 
@@ -580,8 +582,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
     };
 
     const domainData = {
-      verifyingContract:
-        addresses.target.originationController,
+      verifyingContract: addresses.target.originationController,
       name: "OriginationController",
       version: "1",
       // chainId: wallet.chainId,
@@ -627,8 +628,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
         sourceRepaymentController: loan.legacy
           ? chainInfo.contractAddresses.legacy.repaymentController
           : chainInfo.contractAddresses.current.repaymentController,
-        targetOriginationController:
-          addresses.target.originationController,
+        targetOriginationController: addresses.target.originationController,
       },
       loanId: loan.loanId.toString(),
       newLoanTerms,
@@ -737,7 +737,7 @@ function RolloverSigningForm({ loan, oldTerms, chainInfo }) {
       </div>
     </div>
   );
-}
+};
 
 function ConnectPrompt() {
   const [{ data }, connect] = useConnect();
