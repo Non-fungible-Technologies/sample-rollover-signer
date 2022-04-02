@@ -7,13 +7,15 @@ import { toast } from "react-toastify";
 import { ethers } from "ethers";
 
 export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
-  const { loanId, terms, data } = loan;
+  const { loanId, terms, data, legacy } = loan;
   const [showRollover, setShowRollover] = useState(false);
   const [{ data: signer }] = useSigner();
   console.log({ loan });
 
+  const borrowerNoteLookupKey = legacy ? 'legacy' : 'current';
+
   const borrowerNoteContract = useContract({
-    addressOrName: addresses.legacy.borrowerNote,
+    addressOrName: addresses[borrowerNoteLookupKey].borrowerNote,
     contractInterface: promissoryNoteAbi,
     signerOrProvider: signer,
   });
