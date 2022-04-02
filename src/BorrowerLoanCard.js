@@ -13,7 +13,7 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
   console.log({ loan });
 
   const borrowerNoteContract = useContract({
-    addressOrName: addresses.current.borrowerNote,
+    addressOrName: addresses.legacy.borrowerNote,
     contractInterface: promissoryNoteAbi,
     signerOrProvider: signer,
   });
