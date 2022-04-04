@@ -402,6 +402,26 @@ function SubmitContainer() {
     reader.readAsText(selectedFile);
   };
 
+  const onBorrowerSetApprovallAll = async () => {
+    console.log("approving all tokens...");
+    try {
+      const { hash } = await assetWrapperContract.setApprovalForAll(
+        addresses.target.originationController,
+        true
+      );
+
+      const waitForApproval = wait({ confirmations: 1, hash });
+      const response = await toast.promise(waitForApproval, {
+        pending: "Approving All...",
+        success: "Approved",
+        error: "Failed to Approve All tokens",
+      });
+      console.log({ response });
+    } catch (e) {
+      toast.error(e);
+    }
+  };
+
   const onRepay = async () => {
     console.log(`repaying with...${addresses.target.repaymentController}`);
     try {
@@ -535,6 +555,13 @@ function SubmitContainer() {
             style={{ backgroundColor: "white" }}
           >
             Approve USDC (R)
+          </button>
+          &nbsp;&nbsp;
+          <button
+            onClick={() => onBorrowerSetApprovallAll()}
+            style={{ background: "cyan" }}
+          >
+            Approve All
           </button>
         </div>
         {borrowerChainInfo &&
