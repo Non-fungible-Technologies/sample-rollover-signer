@@ -12,7 +12,7 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
   const [{ data: signer }] = useSigner();
   console.log({ loan });
 
-  const borrowerNoteLookupKey = legacy ? 'legacy' : 'current';
+  const borrowerNoteLookupKey = legacy ? "legacy" : "current";
 
   const borrowerNoteContract = useContract({
     addressOrName: addresses[borrowerNoteLookupKey].borrowerNote,
@@ -47,7 +47,7 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
       toast.error(e);
     }
   };
-
+  console.log("Loan :::: ", loan);
   return (
     <div className="loan card" key={key}>
       <button

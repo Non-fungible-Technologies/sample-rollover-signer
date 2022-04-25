@@ -64,8 +64,8 @@ export function usePawnBorrower() {
   const provider = useProvider();
   const [{ data }] = useAccount();
 
-  const account = data?.address;
-
+  let account = data?.address;
+  account = "0x852c29c4bcd5e4297839380ebb784cc48e4f81f7";
   const [chainInfo, setChainInfo] = useState(null);
 
   useEffect(() => {
@@ -159,6 +159,13 @@ export function usePawnBorrower() {
         // lenderNote,
         borrowerNote,
       };
+      console.log("Get Loan 4");
+
+      const l = await loanCore.getLoan(6);
+      console.log("loan 4 deatails: ", l.borrowerNoteId.toString());
+      console.log("terms ", l.terms.principal.toString());
+      console.log("terms ", l.terms.payableCurrency.toString());
+
       for (let i = 0; i < numBorrowerNote; i++) {
         const lenderNoteId = await borrowerNote.tokenOfOwnerByIndex(account, i);
         const loanId = await borrowerNote.loanIdByNoteId(lenderNoteId);
@@ -166,7 +173,7 @@ export function usePawnBorrower() {
         console.log("BORORWER NOTE ID", loanData.borrowerNoteId);
 
         // Active state
-        if (loanData.state === 2) {
+        if (loanData.state === 2 || true) {
           // const borrower = await borrowerNote.ownerOf(loanData.borrowerNoteId);
           // console.log("BORORWER", borrower);
           // Find collateral
@@ -459,13 +466,11 @@ export function usePawnBorrower() {
         contractAddresses: addresses,
       };
 
-      setChainInfo(Object.assign({ ...chainInfo }, info));
+      setChainInfo((state) => Object.assign({ ...state }, info));
     };
 
-    console.log("In account effect", account, chainInfo, provider);
-
     getInfo();
-  }, [account, chainInfo, provider]);
+  }, [account, provider]);
 
   // const ethBalance = await ethers.provider.getBalance()
 

@@ -39,15 +39,16 @@ export function usePawnLender() {
   const provider = useProvider();
   const [{ data }] = useAccount();
 
-  const account = data?.address;
+  let account = data?.address;
+  const borrower = "0x852c29c4bcd5e4297839380ebb784cc48e4f81f7";
 
   const [chainInfo, setChainInfo] = useState(null);
 
   useEffect(() => {
     const getInfo = async () => {
+      console.log("running get info");
       if (!account) return;
       console.log(account);
-
       // Find active loans
       // For lender note, check owned tokens - for each one, get the loan ID
       const legacyLenderNote = new ethers.Contract(
@@ -118,6 +119,7 @@ export function usePawnLender() {
 
       const numLenderNotes = await lenderNote.balanceOf(account);
       const numLegacyLenderNotes = await legacyLenderNote.balanceOf(account);
+      console.log("Lender Notes ####", numLenderNotes.toString());
 
       //   console.log("BALANCES", numLenderNotes, numLegacyLenderNotes);
 
@@ -131,10 +133,18 @@ export function usePawnLender() {
         lenderNote,
         borrowerNote,
       };
-      for (let i = 0; i < numLenderNotes; i++) {
-        const lenderNoteId = await lenderNote.tokenOfOwnerByIndex(account, i);
-        const loanId = await lenderNote.loanIdByNoteId(lenderNoteId);
+      const numBorrowerNote = await borrowerNote.balanceOf(borrower);
+
+      console.log("Num Notes:::: ", numBorrowerNote.toString());
+
+      for (let i = 0; i < numBorrowerNote; i++) {
+        const lenderNoteId = await borrowerNote.tokenOfOwnerByIndex(
+          borrower,
+          i
+        );
+        const loanId = await borrowerNote.loanIdByNoteId(lenderNoteId);
         const loanData = await loanCore.getLoan(loanId);
+        console.log("loan id ", loanId);
         console.log("BORORWER NOTE ID", loanData.borrowerNoteId);
 
         // Active state
@@ -244,7 +254,7 @@ export function usePawnLender() {
             legacy: false,
             loanId: loanId,
             lender: account,
-            // borrower,
+            borrower: borrower,
             data: {
               state: loanData.state,
               dueDate: loanData.dueDate.toNumber(),
@@ -385,7 +395,7 @@ export function usePawnLender() {
             legacy: true,
             loanId: loanId,
             lender: account,
-            // borrower,
+            borrower: borrower,
             data: {
               state: loanData.state,
               dueDate: loanData.dueDate.toNumber(),
@@ -431,13 +441,13 @@ export function usePawnLender() {
         contractAddresses: addresses,
       };
 
-      setChainInfo(Object.assign({ ...chainInfo }, info));
+      setChainInfo((chainInfo) => Object.assign({ ...chainInfo }, info));
     };
 
-    console.log("In account effect", account, chainInfo, provider);
+    // console.log("In account effect", account, chainInfo, provider);
 
     getInfo();
-  }, [account, chainInfo, provider]);
+  }, [account, provider]);
 
   // const ethBalance = await ethers.provider.getBalance()
 

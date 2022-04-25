@@ -268,7 +268,7 @@ function SubmitContainer() {
 function LoanCard({ loan, index: key, chainInfo }) {
   const { loanId, terms, data } = loan;
   const [showRollover, setShowRollover] = useState(false);
-
+  console.log("Loan ::::: ", loan);
   return (
     <div className="loan card" key={key}>
       <h5 className="bold">
