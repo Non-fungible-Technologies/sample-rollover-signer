@@ -23,7 +23,8 @@ export const addresses = {
   },
   target: {
     originationController: "0xf72516d0d038Ec8c0Ef0Fe8f7f4EEaD8Ee1c31E2",
-    flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
+    // flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
+    flashRollover: "0x0aC4742c05A8f61A382e428a0adbcf378bD0d5E8",
     // silver
     // flashRollover: "0x27Ed938FF4d532332C2701866D7869EDcB39d7E4",
     loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325",
