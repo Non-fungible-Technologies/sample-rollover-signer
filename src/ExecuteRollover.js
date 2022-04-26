@@ -222,6 +222,7 @@ export const ExecuteRollover = () => {
         payload.contracts,
         payload.loanId,
         payload.newLoanTerms,
+        payload.lender, // specific to rolling over zombie loan with a different lender
         payload.signature.v,
         r,
         s,

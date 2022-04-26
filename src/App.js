@@ -377,7 +377,10 @@ export const RolloverSigningForm = ({ loan, oldTerms, chainInfo }) => {
   const [terms, setTerms] = useState(initialState);
 
   const updateForm = (key) => (e) => {
-    setTerms({ ...terms, [key]: e.target.value });
+    // const bnFormat = ethers.BigNumber.from(e.target.value);
+    const bnFormat = e.target.value;
+
+    setTerms({ ...terms, [key]: bnFormat });
   };
 
   window.terms = terms;
@@ -407,18 +410,20 @@ export const RolloverSigningForm = ({ loan, oldTerms, chainInfo }) => {
       // chainId: wallet.chainId,
       chainId: "1",
     };
-
+    console.log({ terms });
     const newLoanTerms = {
       durationSecs: terms.duration * SECONDS_IN_DAY,
       principal: ethers.utils
         .parseUnits(
-          terms.principal.toFixed(oldTerms.payableTokenDecimals),
+          // terms.principal.toFixed(oldTerms.payableTokenDecimals),
+          terms.principal.toString(),
           oldTerms.payableTokenDecimals
         )
         .toString(),
       interest: ethers.utils
         .parseUnits(
-          totalInterest.toFixed(oldTerms.payableTokenDecimals),
+          // totalInterest.toFixed(oldTerms.payableTokenDecimals),
+          totalInterest.toString(),
           oldTerms.payableTokenDecimals
         )
         .toString(),

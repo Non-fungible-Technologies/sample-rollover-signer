@@ -10,13 +10,15 @@ export const addresses = {
     lenderNote: "0x6BD1476dD1D57f08670AF6720CA2eDf37B10746E",
     // loanCore: "0x606E4a441290314aEaF494194467Fd2Bb844064A",
     loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325",
-    repaymentController: "0x9eCE636e942bCb67f9E0b7B6C51A56570EF6F38d",
+    // repaymentController: "0x9eCE636e942bCb67f9E0b7B6C51A56570EF6F38d",
+    repaymentController: "0xD7B4586b4eD87e2B98aD2df37A6c949C5aB1B1dB",
     originationController: "0x7C2A27485B69f490945943464541236a025161F6",
     // borrowerNote: "0xe00B37ad3a165A66C20cA3E0170e4749c20eF58c",
     borrowerNote: "0xc3231258D6Ed397Dce7a52a27f816c8f41d22151",
   },
   common: {
-    assetWrapper: "0x1F563CDd688ad47b75E474FDe74E87C643d129b7",
+    // assetWrapper: "0x1F563CDd688ad47b75E474FDe74E87C643d129b7",
+    assetWrapper: "0x5CB803c31e8f4F895a3AB19d8218646dC63e9Dc2",
     flashRollover: "0x24611Fad669350cA869FBed4B62877d1a409dA12",
   },
   tokens: {
@@ -25,7 +27,7 @@ export const addresses = {
   },
   target: {
     originationController: "0xf72516d0d038Ec8c0Ef0Fe8f7f4EEaD8Ee1c31E2",
-    flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
+    flashRollover: "0x0aC4742c05A8f61A382e428a0adbcf378bD0d5E8",
     // silver
     // flashRollover: "0x27Ed938FF4d532332C2701866D7869EDcB39d7E4",
     loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325",
