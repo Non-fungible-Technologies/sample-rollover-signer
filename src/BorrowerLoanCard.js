@@ -5,14 +5,20 @@ import { addresses } from "./config";
 import promissoryNoteAbi from "./abis/promissory-note.json";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
+import { usePayLoan } from "./usePayLoan";
 
 export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
   const { loanId, terms, data, legacy } = loan;
   const [showRollover, setShowRollover] = useState(false);
   const [{ data: signer }] = useSigner();
   console.log({ loan });
+  const { doRepay } = usePayLoan({
+    payableCurrency: terms?.payableCurrency,
+    borrowerNoteId: data?.borrowerNoteId,
+    repaymentController: addresses?.current?.repaymentController,
+  });
 
-  const borrowerNoteLookupKey = legacy ? 'legacy' : 'current';
+  const borrowerNoteLookupKey = legacy ? "legacy" : "current";
 
   const borrowerNoteContract = useContract({
     addressOrName: addresses[borrowerNoteLookupKey].borrowerNote,
@@ -50,15 +56,24 @@ export const BorrowerLoanCard = ({ loan, index: key, chainInfo }) => {
 
   return (
     <div className="loan card" key={key}>
-      <button
-        style={{ background: "white" }}
-        onClick={() => approveNote(loan?.data?.borrowerNoteId)}
-        disabled={!loan?.data?.borrowerNoteId}
-      >{`Approve Note ${loan?.data?.borrowerNoteId}`}</button>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <button
+          style={{ background: "white" }}
+          onClick={() => approveNote(loan?.data?.borrowerNoteId)}
+          disabled={!loan?.data?.borrowerNoteId}
+        >{`Approve Note ${loan?.data?.borrowerNoteId}`}</button>
+        <button style={{ background: "white" }} onClick={() => doRepay()}>
+          Pay Loan
+        </button>
+      </div>
       <h5 className="bold">
         Loan ID {loanId.toString()}
         {loan.legacy && ` (Legacy)`}
       </h5>
+      <p>
+        <strong>State:</strong>
+        {loan?.data?.state === 2 ? " active" : " repaid"}
+      </p>
       <p>
         <strong>Borrower:</strong> {loan.borrower}
       </p>

@@ -431,13 +431,11 @@ export function usePawnLender() {
         contractAddresses: addresses,
       };
 
-      setChainInfo(Object.assign({ ...chainInfo }, info));
+      setChainInfo((chainInfo) => Object.assign({ ...chainInfo }, info));
     };
 
-    console.log("In account effect", account, chainInfo, provider);
-
     getInfo();
-  }, [account, chainInfo, provider]);
+  }, [account, provider]);
 
   // const ethBalance = await ethers.provider.getBalance()
 

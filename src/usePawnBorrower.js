@@ -64,7 +64,8 @@ export function usePawnBorrower() {
   const provider = useProvider();
   const [{ data }] = useAccount();
 
-  const account = data?.address;
+  // const account = data?.address;
+  const account = "0xD96352D264526e78a92229c83A29b1d7159CE031";
 
   const [chainInfo, setChainInfo] = useState(null);
 
@@ -147,7 +148,11 @@ export function usePawnBorrower() {
       const numBorrowerNote = await borrowerNote.balanceOf(account);
       const numLegacyBorrowerNote = await legacyBorrowerNote.balanceOf(account);
 
-      // console.log("BALANCES", numLenderNotes, numLegacyLenderNotes);
+      console.log(
+        "BALANCES",
+        numBorrowerNote.toString(),
+        numLegacyBorrowerNote
+      );
 
       const loans = [];
       window.contracts = {
@@ -308,7 +313,7 @@ export function usePawnBorrower() {
         const loanData = await legacyLoanCore.getLoan(loanId);
 
         // Active state
-        if (loanData.state === 2) {
+        if (loanData.state === 2 || loanData.state === 3) {
           // const borrower = await legacyBorrowerNote.ownerOf(loanData.borrowerNoteId);
           // Find collateral
           const tokenId = loanData.terms.collateralTokenId;
@@ -459,13 +464,11 @@ export function usePawnBorrower() {
         contractAddresses: addresses,
       };
 
-      setChainInfo(Object.assign({ ...chainInfo }, info));
+      setChainInfo((chainInfo) => Object.assign({ ...chainInfo }, info));
     };
 
-    console.log("In account effect", account, chainInfo, provider);
-
     getInfo();
-  }, [account, chainInfo, provider]);
+  }, [account, provider]);
 
   // const ethBalance = await ethers.provider.getBalance()
 
