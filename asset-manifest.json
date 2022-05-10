@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/sample-rollover-signer/static/css/main.ff68ce1a.chunk.css",
-    "main.js": "/sample-rollover-signer/static/js/main.cb12af08.chunk.js",
-    "main.js.map": "/sample-rollover-signer/static/js/main.cb12af08.chunk.js.map",
+    "main.js": "/sample-rollover-signer/static/js/main.54e6b209.chunk.js",
+    "main.js.map": "/sample-rollover-signer/static/js/main.54e6b209.chunk.js.map",
     "runtime-main.js": "/sample-rollover-signer/static/js/runtime-main.1dfe8d29.js",
     "runtime-main.js.map": "/sample-rollover-signer/static/js/runtime-main.1dfe8d29.js.map",
     "static/css/2.58a45539.chunk.css": "/sample-rollover-signer/static/css/2.58a45539.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.58a45539.chunk.css",
     "static/js/2.cafddc6e.chunk.js",
     "static/css/main.ff68ce1a.chunk.css",
-    "static/js/main.cb12af08.chunk.js"
+    "static/js/main.54e6b209.chunk.js"
   ]
 }
