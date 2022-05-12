@@ -28,7 +28,7 @@ export const usePayLoan = ({
 
   const doRepay = async () => {
     // approve repayment controller spending payable currency
-    doApprove();
+    await doApprove();
 
     console.log(`repaying with...${addresses.target.repaymentController}`);
     try {

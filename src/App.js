@@ -139,7 +139,7 @@ function Landing() {
       </div>
       <div className="row centered">
         <Link to="/sample-rollover-signer/borrower">
-          <button className="button-primary">Borrower</button>
+          <button className="button-primary">*Borrower</button>
         </Link>
       </div>
     </div>
