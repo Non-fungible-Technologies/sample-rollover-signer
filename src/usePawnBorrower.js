@@ -64,8 +64,8 @@ export function usePawnBorrower() {
   const provider = useProvider();
   const [{ data }] = useAccount();
 
-  // const account = data?.address;
-  const account = "0xD96352D264526e78a92229c83A29b1d7159CE031";
+  const account = data?.address;
+  // const account = "0xc264880fad20d56eb6c5c18bcb2f3d50f72c7663";
 
   const [chainInfo, setChainInfo] = useState(null);
 
