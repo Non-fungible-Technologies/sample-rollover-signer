@@ -7,7 +7,8 @@ export const addresses = {
     borrowerNote: "0x9B458e2B9c0Cd34A62A26B846f45Eb829aEbC96E",
   },
   current: {
-    lenderNote: "0x6BD1476dD1D57f08670AF6720CA2eDf37B10746E",
+    // lenderNote: "0x6BD1476dD1D57f08670AF6720CA2eDf37B10746E",
+    lenderNote: "0xe1ef2656d965ac9e3fe151312f19f3d4c5f0efa3",
     // loanCore: "0x606E4a441290314aEaF494194467Fd2Bb844064A",
     loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325",
 
@@ -28,7 +29,8 @@ export const addresses = {
   },
   target: {
     originationController: "0xf72516d0d038Ec8c0Ef0Fe8f7f4EEaD8Ee1c31E2",
-    flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
+    flashRollover: "0x24611Fad669350cA869FBed4B62877d1a409dA12",
+    // flashRollover: "0xC06f3ec8601dC3e8116EDd05d5A1721DC2d7250E",
     // silver
     // flashRollover: "0x27Ed938FF4d532332C2701866D7869EDcB39d7E4",
     loanCore: "0x7691EE8feBD406968D46F9De96cB8CC18fC8b325",

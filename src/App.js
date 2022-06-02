@@ -139,7 +139,7 @@ function Landing() {
       </div>
       <div className="row centered">
         <Link to="/sample-rollover-signer/borrower">
-          <button className="button-primary">*Borrower</button>
+          <button className="button-primary">Borrower</button>
         </Link>
       </div>
     </div>
@@ -594,5 +594,7 @@ Flash Rollover Prerequisites:
 
   console.log(str);
 };
+
+window.lastDeploy = "1230PST 06/02";
 
 export default Main;
