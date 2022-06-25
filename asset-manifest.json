@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/sample-rollover-signer/static/css/main.ff68ce1a.chunk.css",
-    "main.js": "/sample-rollover-signer/static/js/main.32068b2d.chunk.js",
-    "main.js.map": "/sample-rollover-signer/static/js/main.32068b2d.chunk.js.map",
-    "runtime-main.js": "/sample-rollover-signer/static/js/runtime-main.1dfe8d29.js",
-    "runtime-main.js.map": "/sample-rollover-signer/static/js/runtime-main.1dfe8d29.js.map",
+    "main.js": "/sample-rollover-signer/static/js/main.d7cc2c4d.chunk.js",
+    "main.js.map": "/sample-rollover-signer/static/js/main.d7cc2c4d.chunk.js.map",
+    "runtime-main.js": "/sample-rollover-signer/static/js/runtime-main.31a3b050.js",
+    "runtime-main.js.map": "/sample-rollover-signer/static/js/runtime-main.31a3b050.js.map",
     "static/css/2.58a45539.chunk.css": "/sample-rollover-signer/static/css/2.58a45539.chunk.css",
-    "static/js/2.b72c206e.chunk.js": "/sample-rollover-signer/static/js/2.b72c206e.chunk.js",
-    "static/js/2.b72c206e.chunk.js.map": "/sample-rollover-signer/static/js/2.b72c206e.chunk.js.map",
-    "static/js/3.10f8cb51.chunk.js": "/sample-rollover-signer/static/js/3.10f8cb51.chunk.js",
-    "static/js/3.10f8cb51.chunk.js.map": "/sample-rollover-signer/static/js/3.10f8cb51.chunk.js.map",
+    "static/js/2.968060bc.chunk.js": "/sample-rollover-signer/static/js/2.968060bc.chunk.js",
+    "static/js/2.968060bc.chunk.js.map": "/sample-rollover-signer/static/js/2.968060bc.chunk.js.map",
+    "static/js/3.1e80723c.chunk.js": "/sample-rollover-signer/static/js/3.1e80723c.chunk.js",
+    "static/js/3.1e80723c.chunk.js.map": "/sample-rollover-signer/static/js/3.1e80723c.chunk.js.map",
     "index.html": "/sample-rollover-signer/index.html",
     "static/css/2.58a45539.chunk.css.map": "/sample-rollover-signer/static/css/2.58a45539.chunk.css.map",
     "static/css/main.ff68ce1a.chunk.css.map": "/sample-rollover-signer/static/css/main.ff68ce1a.chunk.css.map",
-    "static/js/2.b72c206e.chunk.js.LICENSE.txt": "/sample-rollover-signer/static/js/2.b72c206e.chunk.js.LICENSE.txt",
+    "static/js/2.968060bc.chunk.js.LICENSE.txt": "/sample-rollover-signer/static/js/2.968060bc.chunk.js.LICENSE.txt",
     "static/media/mm_logo.svg": "/sample-rollover-signer/static/media/mm_logo.45038d58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.1dfe8d29.js",
+    "static/js/runtime-main.31a3b050.js",
     "static/css/2.58a45539.chunk.css",
-    "static/js/2.b72c206e.chunk.js",
+    "static/js/2.968060bc.chunk.js",
     "static/css/main.ff68ce1a.chunk.css",
-    "static/js/main.32068b2d.chunk.js"
+    "static/js/main.d7cc2c4d.chunk.js"
   ]
 }
